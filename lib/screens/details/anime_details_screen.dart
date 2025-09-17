@@ -29,7 +29,6 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen>
   late ScrollController _scrollController;
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
-  bool _showFloatingButton = false;
 
   @override
   void initState() {
@@ -45,6 +44,11 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen>
     );
 
     _scrollController.addListener(_onScroll);
+
+    // Show FAB immediately when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fabAnimationController.forward();
+    });
   }
 
   @override
@@ -55,17 +59,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen>
   }
 
   void _onScroll() {
-    final showButton = _scrollController.offset > 200;
-    if (showButton != _showFloatingButton) {
-      setState(() {
-        _showFloatingButton = showButton;
-      });
-      if (showButton) {
-        _fabAnimationController.forward();
-      } else {
-        _fabAnimationController.reverse();
-      }
-    }
+    // FAB is now always visible, no scroll-based logic needed
   }
 
   @override

@@ -275,9 +275,13 @@ class _MyListsScreenState extends ConsumerState<MyListsScreen>
     // Apply search filter
     if (_searchQuery.isNotEmpty) {
       entries = entries.where((entry) {
-        // We would need to get the anime data to search by title
-        // For now, this is a placeholder
-        return true; // TODO: Implement anime title search
+        final anime = HiveService.getAnime(entry.animeId);
+        if (anime == null) return false;
+
+        final query = _searchQuery.toLowerCase();
+        return anime.title.toLowerCase().contains(query) ||
+            (anime.titleEnglish?.toLowerCase().contains(query) ?? false) ||
+            (anime.titleJapanese?.toLowerCase().contains(query) ?? false);
       }).toList();
     }
 
@@ -661,10 +665,10 @@ class _MyListsScreenState extends ConsumerState<MyListsScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.1),
+        color: _getStatusColor(status).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _getStatusColor(status).withOpacity(0.3),
+          color: _getStatusColor(status).withValues(alpha: 0.3),
         ),
       ),
       child: Text(

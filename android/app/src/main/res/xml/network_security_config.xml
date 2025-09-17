@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">cdn.myanimelist.net</domain>
+        <domain includeSubdomains="true">api.jikan.moe</domain>
+        <domain includeSubdomains="true">img1.ak.crunchyroll.com</domain>
+        <domain includeSubdomains="true">s4.anilist.co</domain>
+    </domain-config>
+</network-security-config>

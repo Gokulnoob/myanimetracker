@@ -50,15 +50,26 @@ class _FullListScreenState extends ConsumerState<FullListScreen> {
   }
 
   void _loadInitialData() {
+    final provider = _getProvider();
+    final currentState = ref.read(provider);
+
+    // Only refresh if we don't have data or if there was an error
+    final shouldRefresh =
+        currentState.anime.isEmpty || currentState.error != null;
+
     switch (widget.listType) {
       case FullListType.trending:
-        ref.read(trendingAnimeProvider.notifier).loadAnime(refresh: true);
+        ref
+            .read(trendingAnimeProvider.notifier)
+            .loadAnime(refresh: shouldRefresh);
         break;
       case FullListType.seasonal:
-        ref.read(seasonalAnimeProvider.notifier).loadAnime(refresh: true);
+        ref
+            .read(seasonalAnimeProvider.notifier)
+            .loadAnime(refresh: shouldRefresh);
         break;
       case FullListType.topRated:
-        ref.read(topAnimeProvider.notifier).loadAnime(refresh: true);
+        ref.read(topAnimeProvider.notifier).loadAnime(refresh: shouldRefresh);
         break;
     }
   }
@@ -224,6 +235,7 @@ class _FullListScreenState extends ConsumerState<FullListScreen> {
                 final anime = animeState.anime[index];
                 return AnimeCard(
                   anime: anime,
+                  heroContext: 'fulllist-${widget.listType.name}',
                   onTap: () {
                     Navigator.push(
                       context,

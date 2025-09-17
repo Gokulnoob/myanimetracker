@@ -154,7 +154,7 @@ extension SafeString on String {
   }
 }
 
-/// Extension on List<Widget> for safe layouts
+/// Extension on List\<Widget\> for safe layouts
 extension SafeWidgetList on List<Widget> {
   /// Creates a safe row from this list of widgets
   Widget toSafeRow({

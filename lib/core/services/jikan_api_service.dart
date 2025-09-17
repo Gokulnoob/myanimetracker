@@ -34,6 +34,11 @@ class JikanApiService {
         },
         onError: (error, handler) {
           _logger.e('API Error: ${error.message}');
+          _logger.e('Error Type: ${error.type}');
+          if (error.response != null) {
+            _logger.e('Response Status: ${error.response?.statusCode}');
+            _logger.e('Response Data: ${error.response?.data}');
+          }
           handler.next(error);
         },
       ),
@@ -49,6 +54,19 @@ class JikanApiService {
       }
     }
     _lastRequestTime = DateTime.now();
+  }
+
+  /// Test network connectivity by making a simple API call
+  Future<bool> testConnectivity() async {
+    try {
+      _logger.i('Testing network connectivity...');
+      final response = await _dio.get('/anime/1');
+      _logger.i('Connectivity test successful: ${response.statusCode}');
+      return response.statusCode == 200;
+    } catch (e) {
+      _logger.e('Connectivity test failed: $e');
+      return false;
+    }
   }
 
   Future<ApiResponse<List<Anime>>> getTopAnime({

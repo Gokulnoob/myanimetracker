@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:animations/animations.dart';
 import '../../core/providers/providers.dart';
 import '../../core/models/models.dart';
 import '../../core/utils/overflow_utils.dart';
@@ -523,39 +524,37 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       maxCount: 4,
     );
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: GridView.builder(
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.7, // Anime card aspect ratio
+          crossAxisSpacing: 8, // Reduced spacing like trending section
+          mainAxisSpacing: 12, // Slightly less vertical spacing
+          childAspectRatio: 0.68, // Optimized for compact content section
         ),
-        itemCount: searchState.results.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        // Performance optimizations
-        cacheExtent: 1000,
-        addAutomaticKeepAlives: true,
-        addRepaintBoundaries: true,
-        addSemanticIndexes: true,
-        itemBuilder: (context, index) {
-          final anime = searchState.results[index];
-          return RepaintBoundary(
-            key: ValueKey('anime_${anime.malId}'),
-            child: AnimeCard(
-              anime: anime,
-              onTap: () {
-                _searchFocusNode.unfocus();
-                Navigator.push(
-                  context,
-                  AnimeDetailsScreen.route(anime),
-                );
-              },
-            ),
-          );
-        },
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final anime = searchState.results[index];
+            return RepaintBoundary(
+              key: ValueKey('anime_${anime.malId}'),
+              child: OpenContainer(
+                transitionType: ContainerTransitionType.fade,
+                transitionDuration: const Duration(milliseconds: 500),
+                closedBuilder: (context, openContainer) => AnimeCard(
+                  anime: anime,
+                  heroContext: 'search',
+                  onTap: openContainer,
+                ),
+                openBuilder: (context, closeContainer) =>
+                    AnimeDetailsScreen(anime: anime),
+                closedElevation: 0,
+                openElevation: 0,
+              ),
+            );
+          },
+          childCount: searchState.results.length,
+        ),
       ),
     );
   }

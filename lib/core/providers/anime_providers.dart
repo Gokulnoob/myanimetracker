@@ -58,6 +58,7 @@ class AnimeListNotifier extends StateNotifier<AnimeListState> {
 
       switch (_listType) {
         case 'top':
+        case 'trending':
           response = await _apiService.getTopAnime(page: state.currentPage);
           break;
         case 'seasonal':
@@ -124,5 +125,5 @@ final seasonalAnimeProvider =
 final trendingAnimeProvider =
     StateNotifierProvider<AnimeListNotifier, AnimeListState>((ref) {
   final apiService = ref.watch(jikanApiServiceProvider);
-  return AnimeListNotifier(apiService, 'top');
+  return AnimeListNotifier(apiService, 'trending');
 });

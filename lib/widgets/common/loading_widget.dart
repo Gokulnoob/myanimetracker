@@ -48,7 +48,7 @@ class ShimmerGrid extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.7,
+          childAspectRatio: 0.68, // Match AnimeCard aspect ratio
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
